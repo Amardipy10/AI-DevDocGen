@@ -1,6 +1,4 @@
 // server.js
-// The dotenv package is not needed on Vercel, so this line is removed.
-// require('dotenv').config(); 
 const express = require('express');
 const cors = require('cors');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
@@ -15,10 +13,10 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // Define the API route.
 app.post('/api/generate-readme', async (req, res) => {
-  // Check if the API key is available. If not, the function will crash.
+  // Check if the API key is available.
   if (!process.env.GEMINI_API_KEY) {
-    console.error('GEMINI_API_KEY is not configured.');
-    return res.status(500).send('Server configuration error.');
+    console.error('Error: GEMINI_API_KEY environment variable not set.');
+    return res.status(500).send('Server configuration error: API key is missing.');
   }
 
   try {
@@ -28,7 +26,6 @@ app.post('/api/generate-readme', async (req, res) => {
       return res.status(400).send('Prompt is required.');
     }
 
-    // Use the specified Gemini model
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 
     const result = await model.generateContent(prompt);
@@ -44,6 +41,3 @@ app.post('/api/generate-readme', async (req, res) => {
 
 // Export the app instance for Vercel's serverless environment
 module.exports = app;
-app.listen(port, () => {
-  console.log(`✅ Server is running on http://localhost:${port}`);
-});
