@@ -1,23 +1,26 @@
 // server.js
-require('dotenv').config();
+// The dotenv package is not needed on Vercel, so this line is removed.
+// require('dotenv').config(); 
 const express = require('express');
 const cors = require('cors');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const app = express();
 
-// Vercel will handle the port, so we don't need to define it here.
-// const port = 3001; 
-
 app.use(cors());
 app.use(express.json());
 
-// Initialize the Google Generative AI client with the API key from environment variables
+// Initialize the Google Generative AI client with the API key from Vercel's environment variables
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// Define the API route. Vercel will direct requests starting with /api to this file.
-// In your vercel.json, you will route something like /api/generate-readme to this server.
+// Define the API route.
 app.post('/api/generate-readme', async (req, res) => {
+  // Check if the API key is available. If not, the function will crash.
+  if (!process.env.GEMINI_API_KEY) {
+    console.error('GEMINI_API_KEY is not configured.');
+    return res.status(500).send('Server configuration error.');
+  }
+
   try {
     const { prompt } = req.body;
 
@@ -39,16 +42,8 @@ app.post('/api/generate-readme', async (req, res) => {
   }
 });
 
-// This part is removed as Vercel handles the server listening.
-/*
-app.listen(port, () => {
-  console.log(`✅ Server is running on http://localhost:${port}`);
-});
-*/
-
 // Export the app instance for Vercel's serverless environment
 module.exports = app;
-
 app.listen(port, () => {
   console.log(`✅ Server is running on http://localhost:${port}`);
 });
