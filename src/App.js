@@ -42,15 +42,53 @@ const ReadmeGenerator = () => {
       [name]: type === 'checkbox' ? checked : value
     }));
   };
-  const generateReadmePrompt = () => {
-    // ... (This is the same prompt generation logic from your original code)
-    return `Create a comprehensive, professional README.md file for a software project with the following details:
+const generateReadmePrompt = () => {
+    // Prompt ki shuruaat basic details se karte hain
+    let prompt = `
+Generate a high-quality, professional, and well-structured README.md file for the following software project.
+The final output must be a single, complete markdown file.
 
-    Project Name: ${formData.projectName}
-    Description: ${formData.description}
-    Technology Stack: ${formData.techStack}
-    Key Features: ${formData.features}
-    ... and so on`;
+--- PROJECT DETAILS ---
+- **Project Name:** ${formData.projectName}
+- **One-Line Description:** ${formData.description}
+- **Technology Stack:** ${formData.techStack}
+- **Key Features:** ${formData.features}
+`;
+
+    // Advanced details ko conditionally add karte hain
+    if (formData.author) {
+      prompt += `\n- **Author:** ${formData.author}`;
+    }
+    if (formData.email) {
+      prompt += `\n- **Contact Email:** ${formData.email}`;
+    }
+    if (formData.githubUrl) {
+      prompt += `\n- **GitHub Repository URL:** ${formData.githubUrl}`;
+    }
+    if (formData.demoUrl) {
+      prompt += `\n- **Live Demo URL:** ${formData.demoUrl}`;
+    }
+
+    // Checkboxes aur tone ke hisab se AI ko instructions dete hain
+    prompt += `
+
+--- README REQUIREMENTS ---
+- **Tone of Voice:** The README should be written in a **${formData.tone}** tone.
+- **Table of Contents:** ${formData.includeTableOfContents ? 'Yes, please include a detailed Table of Contents at the beginning.' : 'No, do not include a Table of Contents.'}
+- **Badges:** ${formData.includeBadges ? `Yes, include relevant markdown badges for the license (${formData.license}) and the main technologies used. Place them right after the main title.` : 'No, do not include any badges.'}
+- **Contributing Guide:** ${formData.includeContributing ? 'Yes, include a clear "Contributing" section explaining how others can contribute.' : 'No, do not include a "Contributing" section.'}
+- **License Section:** ${formData.includeLicense ? `Yes, include a "License" section at the end, mentioning the project is under the ${formData.license} license.` : 'No, do not include a "License" section.'}
+`;
+    
+    // Installation aur Usage ko bhi add kar dete hain agar user ne bhara ho
+    if (formData.installation) {
+        prompt += `\n\n--- PRE-FILLED SECTIONS ---\nHere is the content for the Installation section. Use it as is:\n${formData.installation}`;
+    }
+     if (formData.usage) {
+        prompt += `\n\nHere is the content for the Usage section. Use it as is:\n${formData.usage}`;
+    }
+
+    return prompt;
   };
 
   const handleGenerateAI = async () => {
