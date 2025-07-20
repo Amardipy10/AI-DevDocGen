@@ -65,7 +65,7 @@ const ReadmeGenerator = () => {
     try {
       const prompt = generateReadmePrompt(); // Create the prompt
 
-      const response = await fetch('http://localhost:3001/generate-readme', {
+      const response = await fetch('/api/generate-readme', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
