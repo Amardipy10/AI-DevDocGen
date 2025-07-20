@@ -5,14 +5,19 @@ const cors = require('cors');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
 const app = express();
-const port = 3001;
+
+// Vercel will handle the port, so we don't need to define it here.
+// const port = 3001; 
 
 app.use(cors());
 app.use(express.json());
 
+// Initialize the Google Generative AI client with the API key from environment variables
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-app.post('/generate-readme', async (req, res) => {
+// Define the API route. Vercel will direct requests starting with /api to this file.
+// In your vercel.json, you will route something like /api/generate-readme to this server.
+app.post('/api/generate-readme', async (req, res) => {
   try {
     const { prompt } = req.body;
 
@@ -20,7 +25,7 @@ app.post('/generate-readme', async (req, res) => {
       return res.status(400).send('Prompt is required.');
     }
 
-    // This is the corrected line with the new model name
+    // Use the specified Gemini model
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
 
     const result = await model.generateContent(prompt);
@@ -33,6 +38,16 @@ app.post('/generate-readme', async (req, res) => {
     res.status(500).send('Failed to generate README.');
   }
 });
+
+// This part is removed as Vercel handles the server listening.
+/*
+app.listen(port, () => {
+  console.log(`✅ Server is running on http://localhost:${port}`);
+});
+*/
+
+// Export the app instance for Vercel's serverless environment
+module.exports = app;
 
 app.listen(port, () => {
   console.log(`✅ Server is running on http://localhost:${port}`);
