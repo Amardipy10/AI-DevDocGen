@@ -1,6 +1,7 @@
 # AI DevDocGen: Automated README.md Generation
 
 **Author:** Amardip Yadav
+
 **Email:** amardipy10@gmail.com
 **GitHub:** [https://github.com/Amardipy10/AI-DevDocGen](https://github.com/Amardipy10/AI-DevDocGen)
 **Demo:** [https://ai-dev-doc-gen.vercel.app/](https://ai-dev-doc-gen.vercel.app/)
