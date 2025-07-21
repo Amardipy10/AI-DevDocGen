@@ -11,7 +11,7 @@ import {generateBasicReadme } from './utils/readmeLogic';
 const ReadmeGenerator = () => {
   // --- STATE MANAGEMENT ---
   const [formData, setFormData] = useState({
-    projectName: 'My Awesome Project', // Added default values for a better initial preview
+    projectName: 'My Awesome Project', 
     description: 'A cutting-edge solution built with modern technologies.',
     techStack: 'React, Node.js, Next.js',
     features: 'Feature A, Feature B, Feature C',
@@ -23,7 +23,7 @@ const ReadmeGenerator = () => {
     email: 'your.email@example.com',
     githubUrl: 'https://github.com/your-username/my-awesome-project',
     demoUrl: '',
-    apiKey: 'AIzaSyBqJ8K9mLnOpQrStUvXyZ3C4D5E6F7G8H9', // Demo key
+    apiKey: 'AIzaSyBqJ8K9mLnOpQrStUvXyZ3C4D5E6F7G8H9', 
     tone: 'professional',
     includeTableOfContents: true,
     includeBadges: true,
@@ -43,7 +43,7 @@ const ReadmeGenerator = () => {
     }));
   };
 const generateReadmePrompt = () => {
-    // Prompt ki shuruaat basic details se karte hain
+  
     let prompt = `
 Generate a high-quality, professional, and well-structured README.md file for the following software project.
 The final output must be a single, complete markdown file.
@@ -55,7 +55,7 @@ The final output must be a single, complete markdown file.
 - **Key Features:** ${formData.features}
 `;
 
-    // Advanced details ko conditionally add karte hain
+
     if (formData.author) {
       prompt += `\n- **Author:** ${formData.author}`;
     }
@@ -69,7 +69,7 @@ The final output must be a single, complete markdown file.
       prompt += `\n- **Live Demo URL:** ${formData.demoUrl}`;
     }
 
-    // Checkboxes aur tone ke hisab se AI ko instructions dete hain
+ 
     prompt += `
 
 --- README REQUIREMENTS ---
@@ -80,7 +80,7 @@ The final output must be a single, complete markdown file.
 - **License Section:** ${formData.includeLicense ? `Yes, include a "License" section at the end, mentioning the project is under the ${formData.license} license.` : 'No, do not include a "License" section.'}
 `;
     
-    // Installation aur Usage ko bhi add kar dete hain agar user ne bhara ho
+
     if (formData.installation) {
         prompt += `\n\n--- PRE-FILLED SECTIONS ---\nHere is the content for the Installation section. Use it as is:\n${formData.installation}`;
     }
