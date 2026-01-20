@@ -27,7 +27,7 @@ app.post("/api/generate-readme", async (req, res) => {
 
     // ✅ WORKING MODEL (v1)
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash"
+      model: "gemini-1.5-flash-latest"
     });
 
     const result = await model.generateContent(prompt);
