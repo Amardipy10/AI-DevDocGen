@@ -1,3 +1,4 @@
+// server.js
 const express = require("express");
 const cors = require("cors");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
@@ -7,12 +8,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Fail fast
+// Safety check
 if (!process.env.GEMINI_API_KEY) {
-  throw new Error("❌ GEMINI_API_KEY missing in env");
+  console.error("❌ GEMINI_API_KEY missing");
+  throw new Error("GEMINI_API_KEY not set");
 }
 
-// ✅ v1 client
+// Init Gemini (Node runtime only)
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 app.post("/api/generate-readme", async (req, res) => {
@@ -20,24 +22,29 @@ app.post("/api/generate-readme", async (req, res) => {
     const { prompt } = req.body;
 
     if (!prompt || typeof prompt !== "string") {
-      return res.status(400).json({ error: "Prompt required" });
+      return res.status(400).json({ error: "Prompt is required" });
     }
 
-    // ✅ THIS MODEL WORKS
+    // ✅ WORKING MODEL (v1)
     const model = genAI.getGenerativeModel({
-      model: "gemini-1.5-flash",
+      model: "gemini-1.5-flash"
     });
 
     const result = await model.generateContent(prompt);
+
+    if (!result?.response) {
+      throw new Error("Empty response from Gemini");
+    }
+
     const text = result.response.text();
 
     return res.status(200).json({ readme: text });
   } catch (err) {
-    console.error("🔥 Gemini failure:", err);
+    console.error("🔥 Gemini Error:", err);
 
     return res.status(500).json({
-      error: "Gemini generation failed",
-      details: err.message,
+      error: "Failed to generate README",
+      details: err.message
     });
   }
 });
