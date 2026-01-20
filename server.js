@@ -26,7 +26,7 @@ app.post('/api/generate-readme', async (req, res) => {
       return res.status(400).send('Prompt is required.');
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+    const model = genAI.getGenerativeModel({ model: "gemini-pro"});
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
